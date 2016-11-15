@@ -454,9 +454,9 @@ var resizePizzas = function(size) {
 
   window.performance.mark("mark_start_generating"); // collect timing data
 
+  var pizzasDiv = document.getElementById("randomPizzas");
   // This for-loop actually creates and appends all of the pizzas when the page loads
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -488,17 +488,19 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
   var items = document.querySelectorAll('.mover');
-  var phase1 = Math.sin((document.body.scrollTop / 1250) + (0 % 5));
-  var phase2 = Math.sin((document.body.scrollTop / 1250) + (1 % 5));
-  var phase3 = Math.sin((document.body.scrollTop / 1250) + (2 % 5));
+
+  var phase = [];
+  for (i = 0; i < 5; i++) {
+  phase.push(Math.sin((document.body.scrollTop / 1250) + ([i] % 5)));
+  };
+  //var phase1 = Math.sin((document.body.scrollTop / 1250) + (0 % 5));
+  //var phase2 = Math.sin((document.body.scrollTop / 1250) + (1 % 5));
+  //var phase3 = Math.sin((document.body.scrollTop / 1250) + (2 % 5));
+  //var phase4 = Math.sin((document.body.scrollTop / 1250) + (3 % 5));
+  //var phase5 = Math.sin((document.body.scrollTop / 1250) + (4 % 5));
 
   for (var i = 0; i < items.length; i++) {
-    if (i % 3 === 0) {
-      items[i].style.left = items[i].basicLeft + 100 * phase1 + 'px'; };
-    if (i % 3 === 1) {
-      items[i].style.left = items[i].basicLeft + 100 * phase2 + 'px'; };
-    if (i % 3 === 2) {
-      items[i].style.left = items[i].basicLeft + 100 * phase3 + 'px'; };
+    items[i].style.left = items[i].basicLeft + 100 * phase[i % 5] + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -537,5 +539,5 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
-  //updatePositions(); - I tookt this out, It was updating positions of pizzas everytime it creates 200 pizzas on screen and jank the load.
+  updatePositions();
 });
